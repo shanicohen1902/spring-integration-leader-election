@@ -36,7 +36,8 @@ public class LeaderHandler {
     		if(client.checkExists().forPath(LEADER_REGISTRY) == null) {
 				String result = client.create().withMode(CreateMode.EPHEMERAL).forPath(LEADER_REGISTRY);
     		}
-			client.setData().forPath(LEADER_REGISTRY,address.getBytes());
+		client.setData().forPath(LEADER_REGISTRY,address.getBytes());
+		
 		} catch (Exception e) {
 			System.out.println("Error when create leader znode: " + e.getMessage());
 		}
@@ -44,17 +45,7 @@ public class LeaderHandler {
 
     @EventListener(OnRevokedEvent.class)
     public void stop() {
-    	try {
-			String address = String.format("http://%s:%s", InetAddress.getLocalHost().getCanonicalHostName(), env.getProperty("server.port"));
-			String node = "/followers/follower"+ "_" + env.getProperty("server.port");
-    		final String result = client.create().withMode(CreateMode.EPHEMERAL).forPath("/follower"+ "_" + env.getProperty("server.port"));
-			if(client.checkExists().forPath(node) != null) {
-				client.setData().forPath(node, address.getBytes());
-			}
-			client.setData().forPath(node,address.getBytes());
-		} catch (Exception e) {
-			System.out.println("Error when create follower znode: " + e.getStackTrace());
-		}
+    	
     }
 
 }
